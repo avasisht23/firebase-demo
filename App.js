@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 import * as firebase from 'firebase';
 
 var firebaseConfig = {
@@ -13,13 +13,59 @@ var firebaseConfig = {
     measurementId: "G-XHR96JFXR0"
   };
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 // firebase.analytics();
+
+async function query() {
+  var ref = firebase.database().ref("table1");
+  ref.once('value').then(function(snapshot) {
+    console.log(snapshot.val())
+  });
+}
+
+async function add(id) {
+  firebase.database().ref('table2/' + id).set({
+    username: "ajay",
+    email: "a.vasisht98@gmail.com"
+  }, function(error) {
+    if (error) {
+      console.log("The write failed...")
+    } else {
+      console.log("Data saved successfully!")
+    }
+  });
+}
+
+async function remove(id) {
+  firebase.database().ref('table2/' + id).set(null
+    , function(error) {
+    if (error) {
+      console.log("The delete failed...")
+    } else {
+      console.log("Data deleted successfully!")
+    }
+  });
+}
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+      <Button
+        title = "Query"
+        onPress = {() => query()}
+      />
+
+      <Button
+        title = "Add"
+        onPress = {() => add(1)}
+      />
+
+      <Button
+        title = "Remove"
+        onPress = {() => remove(1)}
+      />
     </View>
   );
 }
