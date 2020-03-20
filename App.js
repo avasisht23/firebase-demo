@@ -26,7 +26,10 @@ async function query() {
 }
 
 async function add(id) {
-  firebase.database().ref('table2/' + id).set({
+  var ref = firebase.database().ref('table2/')
+  var newItem = ref.push()
+  newItem.set({
+    timestamp: firebase.database.ServerValue.TIMESTAMP,
     username: "ajay",
     email: "a.vasisht98@gmail.com"
   }, function(error) {
